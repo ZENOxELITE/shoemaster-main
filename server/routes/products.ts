@@ -74,7 +74,7 @@
 
 // server/routes/products.ts
 import { Router } from "express";
-import { pool } from ".db.ts"; // named import from db.js
+import { pool } from "../db"; // named import from db.js
 
 const router = Router();
 
