@@ -3,7 +3,8 @@ import { registerRoutes } from "./routes.js";
 import { setupVite, log } from "./vite.js";
 import dotenv from "dotenv";
 import path from "path";
-import productsRouter from "./routes/products.js"; // import your router
+import productsRouter from "./routes/products.js";
+import { db } from "../db";// import your router
 
 // Load environment variables
 dotenv.config();
