@@ -80,11 +80,76 @@
 //     log(`🚀 Server running on port ${port} in ${app.get("env")} mode`);
 //   });
 // })();
+// import express, { type Request, Response, NextFunction } from "express";
+// import dotenv from "dotenv";
+// import path from "path";
+// import productsRouter from "./routes/products.js"; // default export from products.ts
+// import { setupVite, log } from "./vite.js"; // ensure vite.ts exports these
+
+// // Load environment variables
+// dotenv.config();
+
+// const app = express();
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
+
+// // Use routers
+// app.use("/api/products", productsRouter);
+
+// // Logging middleware
+// app.use((req, res, next) => {
+//   const start = Date.now();
+//   let capturedJson: Record<string, any> | undefined;
+
+//   const originalJson = res.json;
+//   res.json = function (body, ...args) {
+//     capturedJson = body;
+//     return originalJson.apply(res, [body, ...args]);
+//   };
+
+//   res.on("finish", () => {
+//     if (req.path.startsWith("/api")) {
+//       let logLine = `${req.method} ${req.path} ${res.statusCode} in ${Date.now() - start}ms`;
+//       if (capturedJson) logLine += ` :: ${JSON.stringify(capturedJson)}`;
+//       if (logLine.length > 80) logLine = logLine.slice(0, 79) + "…";
+//       log(logLine);
+//     }
+//   });
+
+//   next();
+// });
+
+// // Error handling middleware
+// app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+//   const status = err.status || err.statusCode || 500;
+//   res.status(status).json({ message: err.message || "Internal Server Error" });
+//   console.error("Server error:", err);
+// });
+
+// (async () => {
+//   // Serve static files in production
+//   if (app.get("env") === "production") {
+//     app.use(express.static(path.join(process.cwd(), "dist/client")));
+//     app.get("*", (_req, res) => {
+//       res.sendFile(path.join(process.cwd(), "dist/client/index.html"));
+//     });
+//   } else {
+//     // Development: setup Vite
+//     await setupVite(app, app); // pass app as server if needed
+//   }
+
+//   // Start server
+//   const port = process.env.PORT || 5000;
+//   app.listen(port, () => {
+//     log(`🚀 Server running on port ${port} in ${app.get("env")} mode`);
+//   });
+// })();
 import express, { type Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import path from "path";
-import productsRouter from "./routes/products.js"; // default export from products.ts
-import { setupVite, log } from "./vite.js"; // ensure vite.ts exports these
+import http from "http";
+import productsRouter from "./routes/products.js";
+import { setupVite, log } from "./vite.js";
 
 // Load environment variables
 dotenv.config();
@@ -127,20 +192,20 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 });
 
 (async () => {
-  // Serve static files in production
+  const port = process.env.PORT || 5000;
+
   if (app.get("env") === "production") {
+    // Serve the built React app
     app.use(express.static(path.join(process.cwd(), "dist/client")));
     app.get("*", (_req, res) => {
       res.sendFile(path.join(process.cwd(), "dist/client/index.html"));
     });
-  } else {
-    // Development: setup Vite
-    await setupVite(app, app); // pass app as server if needed
-  }
 
-  // Start server
-  const port = process.env.PORT || 5000;
-  app.listen(port, () => {
-    log(`🚀 Server running on port ${port} in ${app.get("env")} mode`);
-  });
+    app.listen(port, () => log(`🚀 Server running on port ${port} in production`));
+  } else {
+    // Development: use http server for Vite HMR
+    const server = http.createServer(app);
+    await setupVite(app, server);
+    server.listen(port, () => log(`🚀 Dev server running on port ${port}`));
+  }
 })();
