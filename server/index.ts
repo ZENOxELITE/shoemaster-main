@@ -3,7 +3,7 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import dotenv from "dotenv";
 import path from "path";
-import productsRouter from "./routes/products";
+import productsRouter from "./routes/products.js";
 // import productsRoutes from "./routes/products";
 
 
