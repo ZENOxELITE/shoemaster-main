@@ -1,0 +1,48 @@
+{
+  "name": "shoemaster",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && vite build",
+    "start": "node dist/server/index.js",
+    "db:seed": "tsx server/seed-products.ts",
+    "postinstall": "npm run build",
+    "dev": "concurrently \"npm run server\" \"vite\"",
+    "server": "tsx server/index.ts"
+  },
+  "dependencies": {
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-toast": "^1.1.5",
+    "@tanstack/react-query": "^5.85.0",
+    "@vitejs/plugin-react": "^4.0.3",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "dotenv": "^16.6.1",
+    "drizzle-orm": "^0.44.4",
+    "drizzle-zod": "^0.8.3",
+    "express": "^4.18.2",
+    "lucide-react": "^0.539.0",
+    "nanoid": "^5.1.5",
+    "pg": "^8.16.3",
+    "postgres": "^3.4.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwind-merge": "^2.0.0",
+    "wouter": "^3.7.1",
+    "zod": "^4.0.17"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.5.0",
+    "autoprefixer": "^10.4.14",
+    "concurrently": "^9.2.0",
+    "postcss": "^8.4.24",
+    "tailwindcss": "^3.3.2",
+    "ts-node": "^10.9.2",
+    "tsx": "^3.12.7",
+    "typescript": "^5.9.2",
+    "vite": "^4.4.5"
+  }
+}
