@@ -74,7 +74,8 @@
 
 // server/routes/products.ts
 import { Router } from "express";
-import { pool } from ".db.ts"; // named import from db.js
+// import { pool } from ".db.ts"; // named import from db.js
+import { db } from "../db";
 
 const router = Router();
 
@@ -121,3 +122,4 @@ router.get("/featured", async (_req, res) => {
 });
 
 export default router;
+
